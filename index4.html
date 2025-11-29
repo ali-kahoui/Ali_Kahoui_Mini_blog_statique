@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog - Frenchcoder</title>
+  <style>
+    body {
+      margin: 10px 80px;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      font-family: sans-serif;
+    }
+
+    nav {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    .onglets a {
+      text-decoration:none;
+      margin-left:10px;
+      color:#444;
+    }
+
+    .filters, .article-navigation, footer {
+      background:white;
+      margin-top:20px;
+      padding:20px;
+      border-radius:15px;
+    }
+
+    .articles {
+      margin-top:30px;
+    }
+
+    .article {
+      background:white;
+      margin-bottom:20px;
+      border-radius:20px;
+      padding:20px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h1>Blogging</h1>
+    <div class="onglets">
+      <a href="#" data-category="all" class="active">Tous</a>
+      <a href="#" data-category="Voyage">Voyage</a>
+      <a href="#" data-category="Interview">Interview</a>
+      <a href="#" data-category="Nature">Nature</a>
+      <a href="#" data-category="Cuisine">Cuisine</a>
+    </div>
+  </nav>
+
+  <div class="filters">
+    <select id="category-filter">
+      <option value="all">Toutes les catégories</option>
+      <option value="Voyage">Voyage</option>
+      <option value="Interview">Interview</option>
+      <option value="Nature">Nature</option>
+      <option value="Cuisine">Cuisine</option>
+    </select>
+
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Rechercher un article...">
+    </div>
+  </div>
+
+  <div class="article-navigation">
+    <button id="prev-article">Article précédent</button>
+    <span id="article-counter">Article 1 sur 1</span>
+    <button id="next-article">Article suivant</button>
+  </div>
+
+  <section id="articles-container"></section>
+
+  <footer>
+    <h2>&copy; 2025, by ALI ELKAHOUI</h2>
+  </footer>
+
+  <script>
+    class MiniBlog {
+        constructor() {
+            this.articles = [];
+            this.filteredArticles = [];
+            this.currentCategory = 'all';
+            this.searchTerm = '';
+            this.currentArticleIndex = 0;
+
+            this.initializeApp();
+        }
+
+        initializeApp() {
+            this.loadArticles();
+            this.setupEventListeners();
+            this.displayArticles();
+        }
+
+        loadArticles() {
+            this.articles = [
+              {
+                id: 1,
+                titre: "Paris - La ville des lumières, pourquoi ?",
+                image: "https://cdn.pixabay.com/photo/2016/11/18/19/01/paris-1836415_1280.jpg",
+                contenu: "Paris est surnommée la Ville Lumière...",
+                date: "NOVEMBRE, 24, 2025",
+                categorie: "Voyage",
+                auteur: "Julie Lablonde"
+              },
+              {
+                id: 2,
+                titre: "Interview - Une ville nocturne est elle si belle ?",
+                image: "https://cdn.pixabay.com/photo/2016/01/19/17/15/night-1149601_1280.jpg",
+                contenu: "Exploration des beautés cachées...",
+                date: "OCTOBRE, 15, 2025",
+                categorie: "Interview",
+                auteur: "Julie Lablonde"
+              },
+              {
+                id: 3,
+                titre: "Les calanques, une belle destination touristique",
+                image: "https://cdn.pixabay.com/photo/2017/01/09/16/15/calanque-1966920_1280.jpg",
+                contenu: "Découverte des magnifiques calanques...",
+                date: "SEPTEMBRE, 12, 2025",
+                categorie: "Nature",
+                auteur: "Julie Lablonde"
+              },
+              {
+                id: 4,
+                titre: "La cuisine française",
+                image: "https://cdn.pixabay.com/photo/2017/09/22/20/41/food-2775135_1280.jpg",
+                contenu: "Les secrets de la gastronomie française...",
+                date: "AOÛT, 5, 2025",
+                categorie: "Cuisine",
+                auteur: "Julie Lablonde"
+              }
+            ];
+
+            this.filteredArticles = [...this.articles];
+        }
+
+        setupEventListeners() {
+            document.getElementById('category-filter').addEventListener('change', (e) => {
+                this.filterByCategory(e.target.value);
+            });
+
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                this.searchTerm = e.target.value.toLowerCase();
+            });
+        }
+
+        filterByCategory(category) {
+            this.currentCategory = category;
+        }
+
+        displayArticles() {
+            const c = document.getElementById("articles-container");
+
+            c.innerHTML = this.filteredArticles.map(a => `
+                <div class="article">
+                    <img src="${a.image}" width="100%">
+                    <h1>${a.titre}</h1>
+                    <p>${a.contenu}</p>
+                </div>
+            `).join('');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new MiniBlog();
+    });
+  </script>
+
+</body>
+</html>
+<!--j'ai ajouté des aricles directement dans le java script avec la methode loadArticles ,tableau contenant 4articles,l'affichage a ete appliqué avec la fct displayArticles-->
