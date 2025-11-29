@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog - Frenchcoder</title>
+
+  <style>
+    body { 
+      margin: 10px 80px; 
+      background: linear-gradient(135deg,#667eea,#764ba2); 
+      font-family: sans-serif; 
+    }
+
+    nav, .filters, .article-navigation, footer {
+      background:white; 
+      padding:20px; 
+      border-radius:15px; 
+      margin-top:20px;
+    }
+
+    .onglets a.active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .article { 
+      background:white; 
+      padding:20px; 
+      margin-top:20px; 
+      border-radius:20px; 
+    }
+
+    .article img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 15px;
+    }
+  </style>
+
+</head>
+<body>
+
+  <nav>
+    <h1>Blogging</h1>
+    <div class="onglets">
+      <a href="#" data-category="all" class="active">Tous</a>
+      <a href="#" data-category="Voyage">Voyage</a>
+      <a href="#" data-category="Interview">Interview</a>
+      <a href="#" data-category="Nature">Nature</a>
+      <a href="#" data-category="Cuisine">Cuisine</a>
+    </div>
+  </nav>
+
+  <div class="filters">
+    <select id="category-filter">
+      <option value="all">Toutes les catégories</option>
+      <option value="Voyage">Voyage</option>
+      <option value="Interview">Interview</option>
+      <option value="Nature">Nature</option>
+      <option value="Cuisine">Cuisine</option>
+    </select>
+
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Rechercher un article...">
+    </div>
+  </div>
+
+  <div class="article-navigation">
+    <button id="prev-article">Article précédent</button>
+    <span id="article-counter">Article 1 sur 1</span>
+    <button id="next-article">Article suivant</button>
+  </div>
+
+  <section id="articles-container"></section>
+
+  <footer>
+    <h2>&copy; 2025, by ALI ELKAHOUI</h2>
+  </footer>
+
+  <script>
+    class MiniBlog {
+
+        constructor() {
+
+            this.articles = [];
+            this.filteredArticles = [];
+            this.currentCategory = 'all';
+            this.searchTerm = '';
+            this.currentArticleIndex = 0;
+
+            this.initializeApp();
+        }
+
+        initializeApp() {
+            this.loadArticles();
+            this.setupEventListeners();
+            this.applyFilters();
+            this.displayArticles();
+        }
+
+        loadArticles() {
+            this.articles = [
+                {
+                  id: 1,
+                  titre: "Paris - La ville des lumières, pourquoi ?",
+                  image: "https://cdn.pixabay.com/photo/2016/11/18/19/01/paris-1836415_1280.jpg",
+                  contenu: "Paris est surnommée la Ville Lumière...",
+                  date: "NOVEMBRE, 24, 2025",
+                  categorie: "Voyage",
+                  auteur: "Julie Lablonde"
+                },
+                {
+                  id: 2,
+                  titre: "Interview - Une ville nocturne est elle si belle ?",
+                  image: "https://cdn.pixabay.com/photo/2016/01/19/17/15/night-1149601_1280.jpg",
+                  contenu: "Exploration des beautés cachées...",
+                  date: "OCTOBRE, 15, 2025",
+                  categorie: "Interview",
+                  auteur: "Julie Lablonde"
+                },
+                {
+                  id: 3,
+                  titre: "Les calanques, une belle destination touristique",
+                  image: "https://cdn.pixabay.com/photo/2017/01/09/16/15/calanque-1966920_1280.jpg",
+                  contenu: "Découverte des magnifiques calanques...",
+                  date: "SEPTEMBRE, 12, 2025",
+                  categorie: "Nature",
+                  auteur: "Julie Lablonde"
+                },
+                {
+                  id: 4,
+                  titre: "La cuisine française",
+                  image: "https://cdn.pixabay.com/photo/2017/09/22/20/41/food-2775135_1280.jpg",
+                  contenu: "Les secrets de la gastronomie française...",
+                  date: "AOÛT, 5, 2025",
+                  categorie: "Cuisine",
+                  auteur: "Julie Lablonde"
+                }
+            ];
+
+            this.filteredArticles = [...this.articles];
+        }
+
+        setupEventListeners() {
+
+            document.getElementById('category-filter').addEventListener('change', (e) => {
+                this.currentCategory = e.target.value;
+                this.applyFilters();
+            });
+
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                this.searchTerm = e.target.value.toLowerCase();
+                this.applyFilters();
+            });
+
+            document.querySelectorAll(".onglets a").forEach(link => {
+              link.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                document.querySelectorAll(".onglets a").forEach(l => l.classList.remove("active"));
+                link.classList.add("active");
+
+                this.currentCategory = link.dataset.category;
+                document.getElementById("category-filter").value = this.currentCategory;
+
+                this.applyFilters();
+              });
+            });
+
+            document.getElementById("prev-article").addEventListener("click", () => {
+              if (this.currentArticleIndex > 0) {
+                this.currentArticleIndex--;
+                this.scrollToCurrentArticle();
+                this.updateNavigation();
+              }
+            });
+
+            document.getElementById("next-article").addEventListener("click", () => {
+              if (this.currentArticleIndex < this.filteredArticles.length - 1) {
+                this.currentArticleIndex++;
+                this.scrollToCurrentArticle();
+                this.updateNavigation();
+              }
+            });
+
+        }
+
+        applyFilters() {
+
+            this.filteredArticles = this.articles.filter(a => {
+
+                const categoryMatch = (this.currentCategory === "all" || a.categorie === this.currentCategory);
+                const searchMatch = a.titre.toLowerCase().includes(this.searchTerm);
+
+                return categoryMatch && searchMatch;
+            });
+
+            this.currentArticleIndex = 0;
+
+            this.displayArticles();
+            this.updateNavigation();
+        }
+
+        displayArticles() {
+            const c = document.getElementById("articles-container");
+
+            if (this.filteredArticles.length === 0) {
+                c.innerHTML = "<p>Aucun article trouvé...</p>";
+                return;
+            }
+
+            c.innerHTML = this.filteredArticles.map(a => `
+                <div class="article">
+                    <img src="${a.image}">
+                    <h1>${a.titre}</h1>
+                    <h3>${a.date}</h3>
+                    <p>${a.contenu}</p>
+                </div>
+            `).join('');
+        }
+
+        scrollToCurrentArticle() {
+            const articlesDOM = document.querySelectorAll(".article");
+            if (articlesDOM[this.currentArticleIndex]) {
+                articlesDOM[this.currentArticleIndex].scrollIntoView({
+                  behavior: "smooth",
+                  block: "start"
+                });
+            }
+        }
+
+        updateNavigation() {
+            const total = this.filteredArticles.length;
+
+            document.getElementById("article-counter").textContent =
+              `Article ${this.currentArticleIndex + 1} sur ${total}`;
+
+            document.getElementById("prev-article").disabled = (this.currentArticleIndex === 0);
+            document.getElementById("next-article").disabled = (this.currentArticleIndex === total - 1);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new MiniBlog();
+    });
+  </script>
+
+</body>
+</html>
+<!--j'ai ajoute le filtrage par categorie,la rechherche instantanné une methode de navigation entre les articles-->
