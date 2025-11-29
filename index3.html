@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog - Frenchcoder</title>
+  <style>
+    body {
+      margin: 10px 80px;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      font-family: sans-serif;
+    }
+
+    nav {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    .onglets a {
+      text-decoration:none;
+      margin-left:10px;
+      color:#444;
+    }
+
+    .filters, .article-navigation, footer {
+      background:white;
+      margin-top:20px;
+      padding:20px;
+      border-radius:15px;
+    }
+
+    .articles {
+      margin-top:30px;
+    }
+
+    .article {
+      background:white;
+      margin-bottom:20px;
+      border-radius:20px;
+      padding:20px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <h1>Blogging</h1>
+    <div class="onglets">
+      <a href="#" data-category="all" class="active">Tous</a>
+      <a href="#" data-category="Voyage">Voyage</a>
+      <a href="#" data-category="Interview">Interview</a>
+      <a href="#" data-category="Nature">Nature</a>
+      <a href="#" data-category="Cuisine">Cuisine</a>
+    </div>
+  </nav>
+
+  <div class="filters">
+    <select id="category-filter">
+      <option value="all">Toutes les catégories</option>
+      <option value="Voyage">Voyage</option>
+      <option value="Interview">Interview</option>
+      <option value="Nature">Nature</option>
+      <option value="Cuisine">Cuisine</option>
+    </select>
+
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Rechercher un article...">
+    </div>
+  </div>
+
+  <div class="article-navigation">
+    <button id="prev-article">Article précédent</button>
+    <span id="article-counter">Article 1 sur 1</span>
+    <button id="next-article">Article suivant</button>
+  </div>
+
+  <section id="articles-container">
+    <!-- Articles dynamiques -->
+  </section>
+
+  <footer>
+    <h2>&copy; 2025, by ALI ELKAHOUI</h2>
+    <div class="social-media">
+      <a href="#"><p><i class="fab fa-facebook"></i></p></a> 
+      <a href="#"><p><i class="fab fa-instagram"></i></p></a>
+    </div>
+  </footer>
+  <script>
+
+    class MiniBlog {
+        constructor() {
+        this.articles = [];
+        this.filteredArticles = [];
+        this.currentCategory = 'all';
+        this.searchTerm = '';
+        this.currentArticleIndex = 0;
+
+        this.initializeApp();
+        }
+
+        initializeApp() {
+            this.setupEventListeners();
+        }
+
+        setupEventListeners() {
+            document.getElementById('category-filter').addEventListener('change', (e) => {
+                this.filterByCategory(e.target.value);
+            });
+
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                this.searchTerm = e.target.value.toLowerCase();
+            });
+        }
+
+        filterByCategory(category) {
+            this.currentCategory = category;
+        }
+    } 
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new MiniBlog();
+    });
+  </script>
+</body>
+</html>
+<!--j'ai crée la structure javaScript du blog (j'ai pas encore charger les articles)-->
