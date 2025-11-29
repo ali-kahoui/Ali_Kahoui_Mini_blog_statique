@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog - Frenchcoder</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css"/>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; 
+}
+body{
+  margin: 10px 80px;
+  font-family: 'Noto Sans JP', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+nav {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items: center;
+  padding: 20px 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  backdrop-filter: blur(10px);
+}
+nav h1{
+  font-family: 'Crimson Text', serif;
+  font-size: 30px;
+  color: #333;
+}
+nav .onglets{
+  display: flex;
+  gap: 20px;
+}
+nav .onglets a{
+  text-decoration: none;
+  color:#7f7e7e;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+nav .onglets a:hover,
+nav .onglets a.active {
+  color: #fff;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Filtres */
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+#category-filter {
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#category-filter:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#search-input {
+  padding: 12px 45px 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  font-size: 16px;
+  width: 300px;
+  transition: all 0.3s ease;
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+.search-box i {
+  position: absolute;
+  right: 15px;
+  color: #7f7e7e;
+}
+
+/* Navigation entre articles */
+.article-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.nav-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.nav-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#article-counter {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Articles */
+.articles{
+  margin-top: 30px;
+  display: grid;
+  gap: 30px;
+}
+
+.article {
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  animation: slideInUp 0.6s ease;
+  backdrop-filter: blur(10px);
+}
+
+.article:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.article .left {
+  flex: 1;
+  overflow: hidden;
+}
+
+.article .left img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.article:hover .left img {
+  transform: scale(1.05);
+}
+
+.article .right {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.article .right .category {
+  display: inline-block;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.article .right p.date{
+  color: #7f7e7e;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.article .right h1{
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #333;
+  line-height: 1.3;
+}
+
+.article .right p.description{
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.article .right p.auteur{
+  color: #7f7e7e;
+  font-style: italic;
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Footer */
+footer {
+  margin-top: 50px;
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: space-between;
+  color: white;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+footer h2{
+  font-size: 20px;
+  font-family: 'Crimson Text', serif;
+  margin-top: 20px;
+}
+footer .social-media {
+  display: flex;
+  gap: 20px;
+}
+
+footer .social-media a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+footer .social-media a p {
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+}
+
+footer .social-media a:hover p {
+  transform: scale(1.2) translateY(-5px);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Couleurs spécifiques pour Facebook et Instagram */
+footer .social-media a:hover .fa-facebook {
+  color: #1877f2;
+  text-shadow: 0 0 10px rgba(24, 119, 242, 0.5);
+}
+
+footer .social-media a:hover .fa-instagram {
+  color: #e4405f;
+  text-shadow: 0 0 10px rgba(228, 64, 95, 0.5);
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px){
+  body {
+    margin: 10px 40px;
+  }
+  
+  .article {
+    flex-direction: column;
+  }
+  
+  .article .left img {
+    height: 300px;
+  }
+}
+
+@media screen and (max-width: 768px){
+  body {
+    margin: 10px 20px;
+  }
+  
+  nav {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  nav .onglets {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .filters {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  #search-input {
+    width: 100%;
+  }
+  
+  .article-navigation {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .article .right {
+    padding: 20px;
+  }
+  
+  .article .right h1 {
+    font-size: 22px;
+  }
+}
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>Blogging</h1>
+    <div class="onglets">
+      <a href="#" class="active" data-category="all">Tous</a>
+      <a href="#" data-category="Voyage">Voyage</a>
+      <a href="#" data-category="Interview">Interview</a>
+      <a href="#" data-category="Nature">Nature</a>
+      <a href="#" data-category="Cuisine">Cuisine</a>
+    </div>
+  </nav>
+  
+  <!-- Filtres -->
+  <div class="filters">
+    <select id="category-filter">
+      <option value="all">Toutes les catégories</option>
+      <option value="Voyage">Voyage</option>
+      <option value="Interview">Interview</option>
+      <option value="Nature">Nature</option>
+      <option value="Cuisine">Cuisine</option>
+    </select>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Rechercher un article...">
+      <i class="fas fa-search"></i>
+    </div>
+  </div>
+
+  <!-- Navigation entre articles -->
+  <div class="article-navigation">
+    <button id="prev-article" class="nav-btn">
+      <i class="fas fa-chevron-left"></i> Article précédent
+    </button>
+    <span id="article-counter">Article 1 sur 4</span>
+    <button id="next-article" class="nav-btn">
+      Article suivant <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <!-- Conteneur des articles -->
+  <section class="articles" id="articles-container">
+    <!-- Les articles seront chargés dynamiquement ici -->
+  </section>
+  
+  <footer>
+  <h2>&copy; 2025, by ALI ELKAHOUI</h2>
+  <div class="social-media">
+    <a href="https://www.facebook.com/share/1D8RApmGZS/" target="_blank" aria-label="Facebook">
+      <p><i class="fab fa-facebook"></i></p>
+    </a>
+    <a href="https://www.instagram.com/kahouiali/" target="_blank" aria-label="Instagram">
+      <p><i class="fab fa-instagram"></i></p>
+    </a>
+  </div>
+</footer>
+
+  <script>
+// Étape 1: Intégration du fichier JSON directement dans le code
+const articlesJSON = `[
+  {
+    "id": 1,
+    "titre": "Paris - La ville des lumières, pourquoi ?",
+    "image": "https://cdn.pixabay.com/photo/2016/11/18/19/01/paris-1836415_1280.jpg",
+    "contenu": "Paris est surnommée la Ville Lumière pour plusieurs raisons historiques...",
+    "date": "NOVEMBRE, 24, 2025",
+    "categorie": "Voyage",
+    "auteur": "Julie Lablonde"
+  },
+  {
+    "id": 2,
+    "titre": "Les défis de l'urbanisme moderne",
+    "image": "https://cdn.pixabay.com/photo/2016/01/19/17/15/night-1149601_1280.jpg",
+    "contenu": "Exploration des défis actuels de l'urbanisme dans nos villes...",
+    "date": "OCTOBRE, 15, 2025",
+    "categorie": "Interview",
+    "auteur": "Julie Lablonde"
+  },
+  {
+    "id": 3,
+    "titre": "Les calanques, une belle destination touristique",
+    "image": "https://cdn.pixabay.com/photo/2017/01/09/16/15/calanque-1966920_1280.jpg",
+    "contenu": "Découverte des magnifiques calanques françaises...",
+    "date": "SEPTEMBRE, 12, 2025",
+    "categorie": "Nature",
+    "auteur": "Julie Lablonde"
+  },
+  {
+    "id": 4,
+    "titre": "Les traditions culinaires du monde",
+    "image": "https://cdn.pixabay.com/photo/2017/09/22/20/41/food-2775135_1280.jpg",
+    "contenu": "Voyage à travers les différentes traditions culinaires du monde...",
+    "date": "AOÛT, 5, 2025",
+    "categorie": "Cuisine",
+    "auteur": "Julie Lablonde"
+  }
+]`;
+
+class MiniBlog {
+    constructor() {
+        this.articles = [];
+        this.filteredArticles = [];
+        this.currentArticleIndex = 0;
+        this.currentCategory = 'all';
+        this.searchTerm = '';
+        
+        this.initializeApp();
+    }
+
+    async initializeApp() {
+        await this.loadArticles();
+        this.setupEventListeners();
+        this.displayArticles();
+        this.updateNavigation();
+    }
+
+    async loadArticles() {
+        // Étape 2: Chargement des articles depuis la variable JSON intégrée
+        // au lieu d'un fichier externe
+        try {
+            this.articles = JSON.parse(articlesJSON);
+            this.filteredArticles = [...this.articles];
+        } catch (error) {
+            console.error('Erreur lors du chargement des articles:', error);
+            this.articles = [];
+            this.filteredArticles = [];
+        }
+    }
+
+    setupEventListeners() {
+        // Filtrage par catégorie
+        document.getElementById('category-filter').addEventListener('change', (e) => {
+            this.filterByCategory(e.target.value);
+        });
+
+        // Filtrage par navigation
+        document.querySelectorAll('nav .onglets a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = e.target.dataset.category;
+                this.filterByCategory(category);
+                
+                // Mise à jour de l'état actif
+                document.querySelectorAll('nav .onglets a').forEach(a => a.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Mise à jour du select
+                document.getElementById('category-filter').value = category;
+            });
+        });
+
+        // Recherche
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            this.searchTerm = e.target.value.toLowerCase();
+            this.applyFilters();
+        });
+
+        // Navigation entre articles
+        document.getElementById('prev-article').addEventListener('click', () => {
+            this.navigate(-1);
+        });
+
+        document.getElementById('next-article').addEventListener('click', () => {
+            this.navigate(1);
+        });
+
+    }
+
+    filterByCategory(category) {
+        this.currentCategory = category;
+        this.currentArticleIndex = 0;
+        this.applyFilters();
+    }
+
+    applyFilters() {
+        this.filteredArticles = this.articles.filter(article => {
+            const matchesCategory = this.currentCategory === 'all' || article.categorie === this.currentCategory;
+            const matchesSearch = !this.searchTerm || 
+                article.titre.toLowerCase().includes(this.searchTerm) ||
+                article.contenu.toLowerCase().includes(this.searchTerm) ||
+                article.auteur.toLowerCase().includes(this.searchTerm);
+            
+            return matchesCategory && matchesSearch;
+        });
+        
+        this.displayArticles();
+        this.updateNavigation();
+    }
+
+    displayArticles() {
+        const container = document.getElementById('articles-container');
+        
+        if (this.filteredArticles.length === 0) {
+            container.innerHTML = `
+                <div class="article fade-in">
+                    <div class="right" style="text-align: center; padding: 60px;">
+                        <h1>Aucun article trouvé</h1>
+                        <p class="description">Aucun article ne correspond à vos critères de recherche.</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = this.filteredArticles.map(article => `
+            <div class="article fade-in" data-article-id="${article.id}">
+                <div class="left">
+                    <img src="${article.image}" alt="${article.titre}">
+                </div>
+                <div class="right">
+                    <span class="category">${article.categorie}</span>
+                    <p class="date">${article.date}</p>
+                    <h1>${article.titre}</h1>
+                    <p class="description">${article.contenu}</p>
+                    <p class="auteur">${article.auteur}</p>
+                </div>
+            </div>
+        `).join('');
+
+        // Animation d'apparition
+        setTimeout(() => {
+            document.querySelectorAll('.article').forEach((article, index) => {
+                article.style.animationDelay = `${index * 0.1}s`;
+            });
+        }, 100);
+    }
+
+    navigate(direction) {
+        const newIndex = this.currentArticleIndex + direction;
+        
+        if (newIndex >= 0 && newIndex < this.filteredArticles.length) {
+            this.currentArticleIndex = newIndex;
+            this.scrollToCurrentArticle();
+            this.updateNavigation();
+        }
+    }
+
+    scrollToCurrentArticle() {
+        const articles = document.querySelectorAll('.article');
+        if (articles[this.currentArticleIndex]) {
+            articles[this.currentArticleIndex].scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+            
+            // Effet de surbrillance
+            articles.forEach(article => article.style.opacity = '0.7');
+            articles[this.currentArticleIndex].style.opacity = '1';
+            
+            setTimeout(() => {
+                articles.forEach(article => article.style.opacity = '1');
+            }, 1000);
+        }
+    }
+
+    updateNavigation() {
+        const prevBtn = document.getElementById('prev-article');
+        const nextBtn = document.getElementById('next-article');
+        const counter = document.getElementById('article-counter');
+        
+        prevBtn.disabled = this.currentArticleIndex === 0;
+        nextBtn.disabled = this.currentArticleIndex === this.filteredArticles.length - 1;
+        
+        counter.textContent = `Article ${this.currentArticleIndex + 1} sur ${this.filteredArticles.length}`;
+        
+        // Mise à jour des styles des boutons
+        [prevBtn, nextBtn].forEach(btn => {
+            if (btn.disabled) {
+                btn.style.opacity = '0.5';
+                btn.style.cursor = 'not-allowed';
+            } else {
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+        });
+    }
+}
+
+// Initialisation de l'application
+document.addEventListener('DOMContentLoaded', () => {
+    new MiniBlog();
+});
+  </script>
+</body>
+</html>
